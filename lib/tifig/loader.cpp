@@ -1,19 +1,7 @@
-#ifndef TIFIG_LOADER
-#define TIFIG_LOADER
+#include "loader.hpp"
 
-#include <future>
+using namespace vips;
 
-#include "heif.hpp"
-#include "hevc_decode.hpp"
-#include "imaging.hpp"
-
-/**
- * Get thumbnail from HEIC image
- * @param reader
- * @param contextId
- * @param gridItemId
- * @return
- */
 VImage getThumbnailImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t thmbId)
 {
     // Get thumbnail HEVC data
@@ -93,4 +81,3 @@ VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridIt
     return image;
 }
 
-#endif

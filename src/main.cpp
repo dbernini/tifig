@@ -1,8 +1,9 @@
+#include "tifig.h"
 #include <cxxopts.hpp>
-#include <log.hpp>
+#include <chrono>
+#include <fstream>
 
-#include "version.h"
-#include "loader.hpp"
+using namespace std;
 
 /**
  * Sanity check: When you edit a HEIC image on iOS 11 it's saved as JPEG instead of HEIC but still has .heic ending.
@@ -10,7 +11,7 @@
  * So check if the file starts with an 'ftyp' box.
  * @param inputFilename
  */
-void sanityCheck(const string& inputFilename) {
+static void sanityCheck(const string& inputFilename) {
     ifstream input(inputFilename);
     if (!input.is_open()) {
         throw logic_error("Could not open file " + inputFilename);
@@ -34,77 +35,6 @@ void sanityCheck(const string& inputFilename) {
     }
 }
 
-/**
- * Main loop
- * @param inputFilename
- * @param outputFilename
- * @param options
- * @return
- */
-int convert(const string& inputFilename, Opts& options)
-{
-    sanityCheck(inputFilename);
-
-    HevcImageFileReader reader;
-    reader.initialize(inputFilename);
-    const uint32_t contextId = reader.getFileProperties().rootLevelMetaBoxProperties.contextId;
-
-    // Detect grid
-    const IdVector& gridItems = findGridItems(&reader, contextId);
-
-    uint32_t gridItemId = gridItems.at(0);
-
-    VIPS_INIT("tifig");
-    avcodec_register_all();
-
-    chrono::steady_clock::time_point begin_encode = chrono::steady_clock::now();
-
-    bool useEmbeddedThumbnail = options.thumbnail;
-    bool createOutputThumbnail = options.width > 0;
-
-    // Detect if we safely can use the embedded thumbnail to create output thumbnail
-    if (createOutputThumbnail) {
-
-        if (options.width <= 240 && options.height <= 240) {
-            useEmbeddedThumbnail = true;
-        }
-    }
-
-    // Get the actual image content from file
-    VImage image;
-    if (useEmbeddedThumbnail) {
-        const uint32_t thmbId = findThumbnailId(&reader, contextId, gridItemId);
-        image = getThumbnailImage(reader, contextId, thmbId);
-    } else {
-        image = getImage(reader, contextId, gridItemId, options);
-    }
-
-    chrono::steady_clock::time_point end_encode = chrono::steady_clock::now();
-    long tileEncodeTime = chrono::duration_cast<chrono::milliseconds>(end_encode - begin_encode).count();
-
-    if (options.verbose) {
-        cout << "Export & decode HEVC: " << tileEncodeTime << "ms" << endl;
-    }
-
-    DataVector exifData = extractExifData(&reader, contextId, gridItemId);
-    addExifMetadata(exifData, image);
-
-    if (createOutputThumbnail)
-    {
-        image = createVipsThumbnail(image, options);
-    }
-
-    if (!options.outputPath.empty()) {
-        saveOutputImageToFile(image, options);
-    }
-    else {
-        printOutputImageToStdout(image, options);
-    }
-
-    vips_shutdown();
-
-    return 0;
-}
 
 Opts getTifigOptions(cxxopts::Options& options)
 {
@@ -137,13 +67,9 @@ void printVersion()
 
 int main(int argc, char* argv[])
 {
-    // Disable colr and pixi boxes unknown warnings from libheif
-    Log::getWarningInstance().setLevel(Log::LogLevel::ERROR);
-
     int retval = 1;
 
     try {
-
         cxxopts::Options options(argv[0], "Converts iOS 11 HEIC images to practical formats");
 
         options.positional_help("input_file [output_file]");
@@ -176,6 +102,7 @@ int main(int argc, char* argv[])
 
             chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 
+            sanityCheck(inputFileName);
             retval = convert(inputFileName, tifigOptions);
 
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
@@ -187,17 +114,13 @@ int main(int argc, char* argv[])
         } else {
             cerr << options.help() << endl;
         }
-    }
-    catch (const cxxopts::OptionException& oe) {
+    } catch (const cxxopts::OptionException& oe) {
         cerr << "error parsing options: " << oe.what() << endl;
-    }
-    catch (const FileReaderException& fre) {
-        cerr << "Could not read HEIF image: " << fre.what() << endl;
-    }
-    catch (const logic_error& le) {
+    } catch (const runtime_error & le) {
         cerr << le.what() << endl;
-    }
-    catch (exception& e) {
+    } catch (const logic_error& le) {
+        cerr << le.what() << endl;
+    } catch (exception& e) {
         cerr << "Conversion failed:" << e.what() << endl;
     }
 

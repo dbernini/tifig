@@ -1,10 +1,4 @@
-#ifndef TIFIG_IMAGING
-#define TIFIG_IMAGING
-
-#include <vips/vips8>
-#include <chrono>
-
-#include "types.hpp"
+#include "imaging.hpp"
 
 using namespace std;
 using namespace vips;
@@ -98,4 +92,3 @@ void printOutputImageToStdout(VImage& img, Opts& options)
     cout.flush();
 }
 
-#endif

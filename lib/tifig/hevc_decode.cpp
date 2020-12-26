@@ -1,14 +1,4 @@
-#ifndef TIFIG_HEVC
-#define TIFIG_HEVC
-
-#include "types.hpp"
-
-extern "C" {
-    #include <libavutil/opt.h>
-    #include <libavutil/imgutils.h>
-    #include <libavcodec/avcodec.h>
-    #include <libswscale/swscale.h>
-};
+#include "hevc_decode.hpp"
 
 using namespace std;
 
@@ -117,5 +107,3 @@ RgbData decodeFrame(DataVector hevcData)
 
     return result;
 }
-
-#endif

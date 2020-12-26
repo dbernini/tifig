@@ -1,9 +1,4 @@
-#ifndef TIFIG_HEIF
-#define TIFIG_HEIF
-
-#include "types.hpp"
-
-using namespace std;
+#include "heif.hpp"
 
 /**
  * Check if image has a grid configuration and return the grid id
@@ -100,4 +95,3 @@ DataVector extractExifData(HevcImageFileReader* reader, uint32_t contextId, uint
     return result;
 }
 
-#endif

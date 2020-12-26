@@ -16,16 +16,4 @@ struct RgbData
     int height = 0;
 };
 
-struct Opts
-{
-    std::string outputPath = "";
-    int width = 0;
-    int height = 0;
-    int quality = 90;
-    bool crop = false;
-    bool parallel = false;
-    bool thumbnail = false;
-    bool verbose = false;
-};
-
 #endif
