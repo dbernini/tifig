@@ -2,6 +2,7 @@
 #include <cxxopts.hpp>
 #include <chrono>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ static void sanityCheck(const string& inputFilename) {
 }
 
 
-Opts getTifigOptions(cxxopts::Options& options)
+static Opts getTifigOptions(cxxopts::Options& options)
 {
     Opts opts = {};
 
@@ -60,14 +61,13 @@ Opts getTifigOptions(cxxopts::Options& options)
     return opts;
 }
 
-void printVersion()
+static void printVersion()
 {
     cout << "tifig " << VERSION << endl;
 }
 
 int main(int argc, char* argv[])
 {
-    int retval = 1;
 
     try {
         cxxopts::Options options(argv[0], "Converts iOS 11 HEIC images to practical formats");
@@ -94,25 +94,29 @@ int main(int argc, char* argv[])
 
         if (options.count("version")) {
             printVersion();
-            retval = 0;
+        
+            exit(EXIT_SUCCESS);
         } else if (options.count("input")) {
             string inputFileName = options["input"].as<string>();
 
             Opts tifigOptions = getTifigOptions(options);
 
-            chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-
             sanityCheck(inputFileName);
-            retval = convert(inputFileName, tifigOptions);
 
+            chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+            int retval = convert(inputFileName, tifigOptions);
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
-            long duration = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
+            
 
             if (tifigOptions.verbose) {
-                cout << "Total Time: " << duration << "ms" << endl;
+                cout << "Total Time: " << 
+                    chrono::duration_cast<chrono::milliseconds>(end - begin).count() << "ms" << endl;
             }
+            
+            exit(retval);
         } else {
             cerr << options.help() << endl;
+            exit(EXIT_FAILURE);
         }
     } catch (const cxxopts::OptionException& oe) {
         cerr << "error parsing options: " << oe.what() << endl;
@@ -124,6 +128,6 @@ int main(int argc, char* argv[])
         cerr << "Conversion failed:" << e.what() << endl;
     }
 
-    return retval;
+    exit(EXIT_FAILURE);
 }
 
