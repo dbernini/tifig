@@ -1,5 +1,8 @@
 #include "loader.hpp"
 
+namespace tifig {
+
+using namespace std;
 using namespace vips;
 
 VImage getThumbnailImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t thmbId)
@@ -23,7 +26,7 @@ VImage getThumbnailImage(HevcImageFileReader& reader, uint32_t contextId, uint32
  * @param gridItemId
  * @return
  */
-VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridItemId, Opts& options)
+VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridItemId, const Opts& options)
 {
     GridItem gridItem;
     gridItem = reader.getItemGrid(contextId, gridItemId);
@@ -81,3 +84,4 @@ VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridIt
     return image;
 }
 
+}

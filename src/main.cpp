@@ -37,9 +37,9 @@ static void sanityCheck(const string& inputFilename) {
 }
 
 
-static Opts getTifigOptions(cxxopts::Options& options)
+static tifig::Opts getTifigOptions(cxxopts::Options& options)
 {
-    Opts opts = {};
+    tifig::Opts opts = {};
 
     if (options.count("output"))
         opts.outputPath = options["output"].as<string>();
@@ -68,7 +68,6 @@ static void printVersion()
 
 int main(int argc, char* argv[])
 {
-
     try {
         cxxopts::Options options(argv[0], "Converts iOS 11 HEIC images to practical formats");
 
@@ -99,12 +98,12 @@ int main(int argc, char* argv[])
         } else if (options.count("input")) {
             string inputFileName = options["input"].as<string>();
 
-            Opts tifigOptions = getTifigOptions(options);
+            tifig::Opts tifigOptions = getTifigOptions(options);
 
             sanityCheck(inputFileName);
 
             chrono::steady_clock::time_point begin = chrono::steady_clock::now();
-            int retval = convert(inputFileName, tifigOptions);
+            int retval = tifig::convert(inputFileName, tifigOptions);
             chrono::steady_clock::time_point end = chrono::steady_clock::now();
             
 

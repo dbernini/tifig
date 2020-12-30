@@ -10,7 +10,7 @@ extern "C" {
     #include <libswscale/swscale.h>
 };
 
-
+namespace tifig {
 
 /**
  * Convert colorspace of decoded frame load into buffer
@@ -35,4 +35,5 @@ AVCodecContext* getHEVCDecoderContext();
  */
 RgbData decodeFrame(DataVector hevcData);
 
+}
 #endif

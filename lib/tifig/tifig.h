@@ -4,6 +4,7 @@
 #include "version.h"
 #include <string>
 
+namespace tifig {
 struct Opts
 {
     std::string outputPath = "";
@@ -19,11 +20,11 @@ struct Opts
 /**
  * Main conversion method
  * @param inputFilename
- * @param outputFilename
  * @param options
  * @return
  */
-int convert(const std::string& inputFilename, Opts& options);
+int convert(const std::string& inputFilename, const Opts& options);
 
+}
 #endif
 

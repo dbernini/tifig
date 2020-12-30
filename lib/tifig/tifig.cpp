@@ -3,10 +3,12 @@
 #include "loader.hpp"
 #include "log.hpp"
 
+namespace tifig {
+
 using namespace std;
 using namespace vips;
 
-int convert(const string& inputFilename, Opts& options)
+int convert(const string& inputFilename, const Opts& options)
 {
     HevcImageFileReader reader;
 
@@ -66,8 +68,7 @@ int convert(const string& inputFilename, Opts& options)
 
     if (!options.outputPath.empty()) {
         saveOutputImageToFile(image, options);
-    }
-    else {
+    } else {
         printOutputImageToStdout(image, options);
     }
 
@@ -76,3 +77,4 @@ int convert(const string& inputFilename, Opts& options)
     return 0;
 }
 
+}

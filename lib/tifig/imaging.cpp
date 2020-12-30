@@ -1,5 +1,7 @@
 #include "imaging.hpp"
 
+namespace tifig {
+
 using namespace std;
 using namespace vips;
 
@@ -22,7 +24,7 @@ void addExifMetadata(DataVector &exifData, VImage &image)
  * @param options
  * @return
  */
-VImage createVipsThumbnail(VImage& img, Opts& options)
+VImage createVipsThumbnail(VImage& img, const Opts& options)
 {
     // This is a bit strange, we have to encode the image into a buffer first
     // However, TIFF encoding is quite fast
@@ -45,7 +47,7 @@ VImage createVipsThumbnail(VImage& img, Opts& options)
  * @param fileName
  * @param options
  */
-void saveOutputImageToFile(VImage &img, Opts &options)
+void saveOutputImageToFile(VImage &img, const Opts &options)
 {
     if (options.outputPath.empty()) {
         throw new logic_error("Can't save to file without 'outputPath' option");
@@ -83,7 +85,7 @@ void saveOutputImageToFile(VImage &img, Opts &options)
     }
 }
 
-void printOutputImageToStdout(VImage& img, Opts& options)
+void printOutputImageToStdout(VImage& img, const Opts& options)
 {
     VipsBlob* jpegBuffer = img.jpegsave_buffer(VImage::option()->set("Q", options.quality));
 
@@ -92,3 +94,4 @@ void printOutputImageToStdout(VImage& img, Opts& options)
     cout.flush();
 }
 
+}

@@ -7,6 +7,8 @@
 #include "hevc_decode.hpp"
 #include "imaging.hpp"
 
+namespace tifig {
+
 /**
  * Get thumbnail from HEIC image
  * @param reader
@@ -23,6 +25,8 @@ vips::VImage getThumbnailImage(HevcImageFileReader& reader, uint32_t contextId, 
  * @param gridItemId
  * @return
  */
-vips::VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridItemId, Opts& options);
+vips::VImage getImage(HevcImageFileReader& reader, uint32_t contextId, uint32_t gridItemId, const Opts& options);
+
+}
 
 #endif

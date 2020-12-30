@@ -1,5 +1,9 @@
 #include "heif.hpp"
 
+namespace tifig {
+
+using namespace std;
+
 /**
  * Check if image has a grid configuration and return the grid id
  * @param reader
@@ -95,3 +99,4 @@ DataVector extractExifData(HevcImageFileReader* reader, uint32_t contextId, uint
     return result;
 }
 
+}

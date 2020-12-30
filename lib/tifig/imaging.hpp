@@ -7,6 +7,8 @@
 #include <vips/vips8>
 #include <chrono>
 
+namespace tifig {
+
 class Opts;
 
 /**
@@ -22,7 +24,7 @@ void addExifMetadata(DataVector &exifData, vips::VImage &image);
  * @param options
  * @return
  */
-vips::VImage createVipsThumbnail(vips::VImage& img, Opts& options);
+vips::VImage createVipsThumbnail(vips::VImage& img, const Opts& options);
 
 /**
  * Save created image to file
@@ -30,8 +32,10 @@ vips::VImage createVipsThumbnail(vips::VImage& img, Opts& options);
  * @param fileName
  * @param options
  */
-void saveOutputImageToFile(vips::VImage &img, Opts &options);
+void saveOutputImageToFile(vips::VImage &img, const Opts &options);
 
-void printOutputImageToStdout(vips::VImage& img, Opts& options);
+void printOutputImageToStdout(vips::VImage& img, const Opts& options);
+
+}
 
 #endif

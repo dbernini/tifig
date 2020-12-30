@@ -1,5 +1,7 @@
 #include "hevc_decode.hpp"
 
+namespace tifig {
+
 using namespace std;
 
 static struct SwsContext* swsContext;
@@ -106,4 +108,6 @@ RgbData decodeFrame(DataVector hevcData)
     av_free(frame);
 
     return result;
+}
+
 }

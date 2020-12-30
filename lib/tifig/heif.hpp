@@ -3,7 +3,7 @@
 
 #include "types.hpp"
 
-using namespace std;
+namespace tifig {
 
 /**
  * Check if image has a grid configuration and return the grid id
@@ -34,4 +34,5 @@ int findExifHeaderOffset(DataVector &exifData);
  */
 DataVector extractExifData(HevcImageFileReader* reader, uint32_t contextId, uint32_t itemId);
 
+} // end namespace tifig
 #endif

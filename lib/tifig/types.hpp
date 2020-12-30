@@ -3,6 +3,8 @@
 
 #include <hevcimagefilereader.hpp>
 
+namespace tifig {
+
 typedef ImageFileReaderInterface::DataVector DataVector;
 typedef ImageFileReaderInterface::IdVector IdVector;
 typedef ImageFileReaderInterface::GridItem GridItem;
@@ -15,5 +17,7 @@ struct RgbData
     int width = 0;
     int height = 0;
 };
+
+}
 
 #endif
