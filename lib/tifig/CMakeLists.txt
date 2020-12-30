@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 # Needed for heif library from nokia
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unused-parameter -Wno-unused-variable")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(STATIC_BUILD "Build tifig static")
 
@@ -45,7 +46,6 @@ include_directories(${VIPS_INCLUDE_DIRS})
 
 
 add_library(tifiglib hevc_decode.cpp heif.cpp imaging.cpp loader.cpp tifig.cpp)
-
 
 target_link_libraries(tifiglib heifreader pthread)
 target_link_libraries(tifiglib ${TIFIG_LDFLAGS})
